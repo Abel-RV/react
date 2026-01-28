@@ -21,12 +21,12 @@ export default function FormularioTarea({
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
         />
-        <button>Añadir</button>
-        <p style={{ color: "blue" }}>
-          ç<button onClick={interruptorAyuda}>Ayuda</button>
-          Debeis introducir el nombre de la tarea que quieras crear
-        </p>
-      </form>
+        </form>
+        <button type="submit">Añadir</button>
+        <button type="button" onClick={interruptorAyuda}>Ayuda</button>
+
+          {visible&&(<p style={{color:"blue"}}>Debeis introducir el nombre de la tarea que quieras crear</p>)}
+      
     </div>
   );
 }

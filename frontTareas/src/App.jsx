@@ -2,8 +2,6 @@ import { useState } from "react";
 import "./App.css";
 import FormularioTarea from "./components/FormularioTarea";
 import { ListaTareas } from "./components/ListaTareas";
-("./components/ListaTareas");
-import "./components/Tarea";
 
 export default function App() {
   //Crea los estados
