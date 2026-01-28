@@ -4,6 +4,7 @@ import FormularioTarea from "./components/FormularioTarea";
 import { ListaTareas } from "./components/ListaTareas";
 import "./components/Tarea";
 import { fetchTareas} from "./api/tareasApi";
+import { crearTarea } from "./api/tareasApi";
 
 export default function App() {
   //Crea los estados
@@ -27,16 +28,24 @@ export default function App() {
   function borrarTarea(id) {
     setTareas(tareas.filter((tarea) => tarea.id !== id));
   }
-  function agregarTarea(event) {
-    event.preventDefault(); //Evita que se envie el formulario y recargue la pagina
-    setTareas([
-      ...tareas,
-      {
-        id: crypto.randomUUID(), //Añade un identificador unico a cada elemento
-        texto,
-      },
-    ]);
-    setTexto("");
+  async function agregarTarea(event) {
+    event.preventDefault(); 
+
+    if (!texto.trim()) return; // Evitar enviar tareas vacías
+
+    // Creamos el objeto a enviar. Normalmente no enviamos ID, la BD lo crea.
+    const nuevaTarea = { texto: texto };
+
+    // 3. LLAMADA A LA API
+    const tareaGuardada = await crearTarea(nuevaTarea);
+
+    if (tareaGuardada) {
+      // 4. Si se guardó bien, actualizamos la lista con lo que devolvió el servidor
+      setTareas([...tareas, tareaGuardada]);
+      setTexto("");
+    } else {
+      alert("Error al guardar la tarea");
+    }
   }
   return (
     <div>

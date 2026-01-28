@@ -1,10 +1,9 @@
 export default function Tarea({ tarea, borrarTarea }) {
   return (
-    <div>
-      <li>
-        {tarea.texto}
+    <li> 
+        {tarea.texto+" "}
+        <input type="checkbox" name="che" id="che" checked="false" />
         <button onClick={() => borrarTarea(tarea.id)}>X</button>
-      </li>
-    </div>
+    </li>
   );
 }

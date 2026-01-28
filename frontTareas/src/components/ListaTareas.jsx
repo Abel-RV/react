@@ -1,5 +1,5 @@
 import Tarea from "./Tarea";
-export function ListaTareas({ tareas, borrarTarea }) {
+export function ListaTareas({ tareas=[], borrarTarea }) {
   return (
     <div>
       <ul>

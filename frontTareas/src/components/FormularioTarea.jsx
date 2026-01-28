@@ -13,16 +13,16 @@ export default function FormularioTarea({
   return (
     <div>
       <form onSubmit={onEnvioFormulario}>
-        <label htmlFor="texto">Nueva tarea: </label>
-        <input
-          id="texto"
-          type="text"
-          placeholder="Introduce el nombre"
-          value={texto}
-          onChange={(e) => setTexto(e.target.value)}
-        />
-        </form>
-        <button type="submit">Añadir</button>
+    <label htmlFor="texto">Nueva tarea: </label>
+    <input
+      id="texto"
+      type="text"
+      placeholder="Introduce el nombre"
+      value={texto}
+      onChange={(e) => setTexto(e.target.value)}
+    />
+    <button type="submit">Añadir</button>
+</form>
         <button type="button" onClick={interruptorAyuda}>Ayuda</button>
 
           {visible&&(<p style={{color:"blue"}}>Debeis introducir el nombre de la tarea que quieras crear</p>)}
