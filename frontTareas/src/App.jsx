@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import FormularioTarea from "./components/FormularioTarea";
 import { ListaTareas } from "./components/ListaTareas";
+import "./components/Tarea";
+import { fetchTareas} from "./api/tareasApi";
 
 export default function App() {
   //Crea los estados
@@ -13,6 +15,14 @@ export default function App() {
   ]);
 
   const [texto, setTexto] = useState("");
+
+  useEffect(() => {
+    const cargarTareas = async () => {
+      const tareas = await fetchTareas();
+      setTareas(tareas);
+    };
+    cargarTareas();
+  }, []);
 
   function borrarTarea(id) {
     setTareas(tareas.filter((tarea) => tarea.id !== id));
