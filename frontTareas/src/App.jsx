@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import FormularioTarea from "./components/FormularioTarea";
 import { ListaTareas } from "./components/ListaTareas";
-import "./components/Tarea";
 import { fetchTareas} from "./api/tareasApi";
 import { crearTarea } from "./api/tareasApi";
 
