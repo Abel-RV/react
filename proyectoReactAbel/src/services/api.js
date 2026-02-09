@@ -81,6 +81,25 @@ export const api = {
       throw err;
     }
   },
+  register: async (email, password) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      
+      if (!res.ok) {
+        // Intentar leer el error del backend
+        const errorText = await res.text();
+        throw new Error(errorText || 'Error al registrarse');
+      }
+      return true;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  },
 
   delete: async (endpoint) => {
     try {

@@ -12,11 +12,8 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Al cargar la app, miramos si hay token guardado
     const token = localStorage.getItem('jwt_token');
-    if (token) {
-      setIsAuthenticated(true);
-    }
+    if (token) setIsAuthenticated(true);
     setLoading(false);
   }, []);
 
@@ -30,13 +27,24 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // [NUEVO] Función de registro
+  const register = async (email, password) => {
+    try {
+      await api.register(email, password);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('jwt_token');
     setIsAuthenticated(false);
   };
 
+  // Añadimos 'register' al value
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, loading }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, register, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );
