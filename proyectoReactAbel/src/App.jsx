@@ -1,30 +1,35 @@
 import { useState } from 'react'
-import Sidebar from './components/Sidebar.jsx'
-import PartidasManager from './pages/PartidasManager.jsx'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [section, setSection] = useState('partidas');
+  const [count, setCount] = useState(0)
 
   return (
-    <div className="flex h-screen w-full bg-isaac-dark text-gray-200 font-roboto overflow-hidden">
-      <Sidebar currentSection={section} setSection={setSection} />
-      
-      <main className="flex-1 p-8 overflow-y-auto relative bg-isaac-dark">
-        {section === 'partidas' && <PartidasManager />}
-        
-        {section === 'mapas' && (
-            <div className="text-center mt-20 text-gray-500">
-                <h2 className="text-xl">Gestor de Mapas (Próximamente)</h2>
-            </div>
-        )}
-        
-        {/* Agrega el resto de condicionales aquí */}
-      </main>
-    </div>
-  );
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.jsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
 }
 
-export default App;
+export default App
