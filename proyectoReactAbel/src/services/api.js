@@ -19,32 +19,67 @@ export const api = {
         body: JSON.stringify({ email, password })
       });
       
-      if (!res.ok) throw new Error('Credenciales inválidas');
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || 'Credenciales inválidas');
+      }
       
-      // Asumimos que el backend devuelve { "token": "..." } o el string directo
       const data = await res.json();
-      const token = data.token || data; // Ajuste según tu DTO de respuesta
+      const token = data.token || data; 
       
       localStorage.setItem('jwt_token', token);
       return true;
     } catch (err) {
-      console.error(err);
+      console.error('Login error:', err);
+      throw err;
+    }
+  },
+
+  register: async (email, password) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        try {
+          const jsonErr = JSON.parse(errorText);
+          throw new Error(jsonErr.error || jsonErr.message || 'Error al registrarse');
+        } catch (e) {
+          throw new Error(errorText || 'Error al registrarse');
+        }
+      }
+      return true;
+    } catch (err) {
+      console.error('Register error:', err);
       throw err;
     }
   },
 
   get: async (endpoint) => {
     try {
-      const res = await fetch(`${API_URL}${endpoint}`, { headers: getHeaders() });
+      const res = await fetch(`${API_URL}${endpoint}`, { 
+        headers: getHeaders() 
+      });
+      
       if (res.status === 403 || res.status === 401) {
         localStorage.removeItem('jwt_token');
-        window.location.reload(); // Forzar logout si el token caduca
+        window.location.reload();
         return null;
       }
-      if (!res.ok) throw new Error(`Error ${res.status}`);
-      return await res.json();
+      
+      if (!res.ok) {
+        throw new Error(`Error ${res.status}: ${res.statusText}`);
+      }
+      
+      // Si la respuesta está vacía (204 No Content), devolver null
+      const text = await res.text();
+      return text ? JSON.parse(text) : null;
     } catch (err) {
-      console.error(err);
+      console.error('GET error:', err);
       return null;
     }
   },
@@ -69,34 +104,15 @@ export const api = {
       if (!res.ok) {
         const errorText = await res.text();
         try {
-            const jsonErr = JSON.parse(errorText);
-            throw new Error(jsonErr.message || jsonErr.error || 'Error en la petición');
+          const jsonErr = JSON.parse(errorText);
+          throw new Error(jsonErr.message || jsonErr.error || `Error ${res.status}`);
         } catch (e) {
-            throw new Error(errorText || 'Error desconocido');
+          throw new Error(errorText || `Error ${res.status}`);
         }
       }
       return true;
     } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  },
-  register: async (email, password) => {
-    try {
-      const res = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      
-      if (!res.ok) {
-        // Intentar leer el error del backend
-        const errorText = await res.text();
-        throw new Error(errorText || 'Error al registrarse');
-      }
-      return true;
-    } catch (err) {
-      console.error(err);
+      console.error('Save error:', err);
       throw err;
     }
   },
@@ -107,8 +123,16 @@ export const api = {
         method: 'DELETE',
         headers: getHeaders()
       });
+      
+      if (res.status === 403 || res.status === 401) {
+        localStorage.removeItem('jwt_token');
+        window.location.reload();
+        return false;
+      }
+      
       return res.ok;
     } catch (err) {
+      console.error('Delete error:', err);
       return false;
     }
   }
